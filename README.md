@@ -1,25 +1,39 @@
 # Gateway Service
 
 ## Description
-The Gateway Service acts as an API gateway to route requests to the appropriate microservices.
+The Gateway Service acts as an API gateway, forwarding requests to the appropriate microservices. It provides endpoints for user registration, login, messaging, and user management.
 
 ## Endpoints
+- `POST /api/register`: Forward registration request to Auth Service.
+- `POST /api/login`: Forward login request to Auth Service.
+- `POST /api/send`: Forward send message request to Chat Service.
+- `GET /api/messages/<receiver>`: Forward get messages request to Chat Service.
+- `POST /api/create`: Forward create user request to User Service.
+- `GET /api/profile`: Forward get profile request to User Service.
+- `GET /api/users`: Forward get users request to Auth Service.
+- `POST /api/send-request/<r_username>`: Forward send friend request to User Service.
+- `POST /api/accept-request/<r_username>`: Forward accept friend request to User Service.
+- `POST /api/withdraw-request/<r_username>`: Forward withdraw friend request to User Service.
+- `GET /api/friends`: Forward get friends request to User Service.
 
 ### Register
-- **URL:** `/register`
+- **URL:** `/api/register`
 - **Method:** `POST`
 - **Request Body:**
   ```json
   {
-    "username": "string",
-    "password": "string"
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "mobile": "string",
+      "name": "string",
   }
 - **Response:**
-    - 201 Created if the user is registered successfully.
-    - 400 Bad Request if the user already exists.
+    - 201 `Created` if the user is registered successfully.
+    - 400 `Bad Request` if the user already exists.
 
 ### Login
-- **URL:** `/login`
+- **URL:** `/api/login`
 - **Method:** `POST`
 - **Request Body:**
   ```json
@@ -32,8 +46,10 @@ The Gateway Service acts as an API gateway to route requests to the appropriate 
     - 401 Unauthorized if the credentials are invalid.
 
 ### Send Message
-- **URL:** `/send`
+- **URL:** `/api/send`
 - **Method:** `POST`
+- **Headers:**
+  - `X-Logged-In-UserName: <username>`
 - **Request Body:**
   ```json
     {
@@ -42,32 +58,17 @@ The Gateway Service acts as an API gateway to route requests to the appropriate 
         "message": "string"
     }
 - **Response:**
-    - 201 Created if the message is sent successfully.
+    - 201 `Created` if the message is sent successfully.
 
 ### Get Message
-- **URL:** `/message`
+- **URL:** `/api/message`
 - **Method:** `GET`
+- 
 - **Response:**
     - 200 OK with a list of messages.
 
-### Create User Profile
-- **URL:** `/create`
-- **Method:** `POST`
-- **Request Body:**
-  ```json
-    {
-        "username": "string",
-        "profile": {
-            "name": "string",
-            "email": "string"
-        }
-    }
-- **Response:**
-    - 201 Created if the user profile is created successfully.
-    - 400 Bad Request if the user already exists.
-
 ### Get User Profile
-- **URL:** `/profile/<username>`
+- **URL:** `/api/profile/<username>`
 - **Method:** `GET`
 - **Response:**
     - 200 OK with the user profile.
